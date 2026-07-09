@@ -13,8 +13,8 @@
 
 ## 3. Storage adapters (TDD)
 
-- [ ] 3.1 Write tests (against a disposable Qdrant instance) for upsert + payload-filtered retrieval by `project`/`item_type`/`state`
-- [ ] 3.2 Implement `QdrantVectorStore` (collection setup, dense + optional sparse vectors, payload mapping)
+- [~] 3.1 Write tests (against a disposable Qdrant instance) for upsert + payload-filtered retrieval by `project`/`item_type`/`state` — payload/filter/id mapping unit-tested; live upsert+retrieval integration needs a running Qdrant (litmus)
+- [x] 3.2 Implement `QdrantVectorStore` (collection setup, dense + optional sparse vectors, payload mapping) — dense vectors; sparse not emitted by Ollama (noted); persists decision rationale + filterable fields
 - [x] 3.3 Write tests for blob round-trip (store binary → retrieve by `volume_path`)
 - [x] 3.4 Implement `IBlobStore` with a filesystem-volume adapter (MinIO adapter behind the same interface) — filesystem adapter done; MinIO adapter deferred behind `IBlobStore`
 
