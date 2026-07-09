@@ -15,6 +15,9 @@ public class DecisionExtractorTests
             Assert.True(expectCall, "model should not have been called");
             return Task.FromResult(response);
         }
+
+        public Task<string> CompleteAsync(string systemPrompt, string userPrompt, CancellationToken ct = default) =>
+            throw new NotSupportedException("extractor uses CompleteJsonAsync only");
     }
 
     private static MemoryRecord Record(string text, ItemType type = ItemType.WorkItem) => new()

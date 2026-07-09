@@ -47,11 +47,11 @@
 
 ## 8. Query / RAG (TDD)
 
-- [ ] 8.1 Write tests for hybrid retrieval (semantic + `project`/`item_type`/`state` filters)
-- [ ] 8.2 Implement the retriever over `QdrantVectorStore`
-- [ ] 8.3 Write tests for "declined and why" and "technical limitations" answers, each scoped to project and returning citations
-- [ ] 8.4 Write test: empty retrieval → explicit "no supporting evidence", no fabrication
-- [ ] 8.5 Implement the query service (retrieve → local-model summarize → answer + citations)
+- [x] 8.1 Write tests for hybrid retrieval (semantic + `project`/`item_type`/`state` filters)
+- [~] 8.2 Implement the retriever over `QdrantVectorStore` — retrieval orchestration + filter building done in `QueryService` over `IVectorStore`; the real `QdrantVectorStore` adapter is task 3.2 (infra)
+- [x] 8.3 Write tests for "declined and why" and "technical limitations" answers, each scoped to project and returning citations
+- [x] 8.4 Write test: empty retrieval → explicit "no supporting evidence", no fabrication
+- [x] 8.5 Implement the query service (retrieve → local-model summarize → answer + citations)
 
 ## 9. API host (TDD)
 

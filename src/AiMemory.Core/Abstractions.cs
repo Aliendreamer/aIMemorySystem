@@ -85,4 +85,10 @@ public interface IChatModel
         string userPrompt,
         string jsonSchema,
         CancellationToken ct = default);
+
+    /// <summary>Completes a prompt as free-form text (used for answer summarization).</summary>
+    Task<string> CompleteAsync(
+        string systemPrompt,
+        string userPrompt,
+        CancellationToken ct = default);
 }
