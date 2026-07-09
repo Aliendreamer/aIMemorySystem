@@ -7,6 +7,8 @@
       "allowedDomains": [
         "*.githubusercontent.com",
         "*.npmjs.org",
+        "*.nuget.org",
+        "api.nuget.org",
         "codeload.github.com",
         "files.pythonhosted.org",
         "github.com",
@@ -19,8 +21,10 @@
       "allowWrite": [
         "/usr/local/share/.yarn-global",
         "~/.cache",
+        "~/.dotnet",
         "~/.local/share/pnpm",
-        "~/.npm"
+        "~/.npm",
+        "~/.nuget"
       ]
     }
   },
