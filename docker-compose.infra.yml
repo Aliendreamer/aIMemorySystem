@@ -16,8 +16,8 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:8080
       - Ollama__Url=${OLLAMA_URL:-http://ollama:11434/}
-      - Ollama__ChatModel=${OLLAMA_CHAT_MODEL:-qwen2.5}
-      - Ollama__EmbedModel=${OLLAMA_EMBED_MODEL:-bge-m3}
+      - Ollama__ChatModel=${OLLAMA_CHAT_MODEL:-qwen3:8b}
+      - Ollama__EmbedModel=${OLLAMA_EMBED_MODEL:-mxbai-embed-large}
       - Qdrant__Host=${QDRANT_HOST:-qdrant}
       - Qdrant__Port=${QDRANT_PORT:-6334}
       - Qdrant__Collection=aimemory

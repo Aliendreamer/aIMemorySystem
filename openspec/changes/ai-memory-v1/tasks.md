@@ -67,6 +67,6 @@
 
 ## 11. Litmus validation
 
-- [ ] 11.1 Configure one GitHub + one Azure DevOps project from the maintainer's own accounts
-- [ ] 11.2 Run ingestion end-to-end and spot-check stored records, edges, and attachment links
-- [ ] 11.3 Ask both v1 questions against the real projects and verify answers + citations are truthful (and honest about gaps)
+- [~] 11.1 Configure one GitHub + one Azure DevOps project from the maintainer's own accounts — ran against this repo (in-repo knowledge path) on real infra; MCP source connectors still pending (5.x)
+- [x] 11.2 Run ingestion end-to-end and spot-check stored records, edges, and attachment links — 37 chunks stored, 0 failed, 0 dropped against real Ollama (qwen3:8b + mxbai-embed-large) + Qdrant
+- [x] 11.3 Ask both v1 questions against the real projects and verify answers + citations are truthful (and honest about gaps) — "declined" returned a cited answer; "limitations" returned honest no-evidence, confirming the DecisionType-only recall gap (v2)

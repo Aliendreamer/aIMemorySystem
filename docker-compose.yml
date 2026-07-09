@@ -28,8 +28,8 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:8080
       - Ollama__Url=http://ollama:11434/
-      - Ollama__ChatModel=qwen2.5   # TODO: pin the chosen small model
-      - Ollama__EmbedModel=bge-m3
+      - Ollama__ChatModel=qwen3:8b   # qwen3:0.6b for a faster/smaller option
+      - Ollama__EmbedModel=mxbai-embed-large
       - Qdrant__Host=qdrant
       - Qdrant__Port=6334
       - Qdrant__Collection=aimemory

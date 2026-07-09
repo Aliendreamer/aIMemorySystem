@@ -4,10 +4,15 @@ using AiMemory.Connectors;
 using AiMemory.Core;
 using AiMemory.Ingestion;
 using AiMemory.Query;
+using System.Text.Json.Serialization;
 using AiMemory.Storage;
 using Qdrant.Client;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Accept/emit enums (e.g. SourceKind, DecisionType) as their string names.
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 var ollamaUrl = builder.Configuration["Ollama:Url"] ?? "http://localhost:11434/";
 var chatModelName = builder.Configuration["Ollama:ChatModel"] ?? "qwen2.5";
