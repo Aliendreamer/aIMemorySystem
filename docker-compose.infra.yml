@@ -1,0 +1,37 @@
+# Attach ONLY the API to your existing Ollama/Qdrant running on the
+# `personalcommandcenter_default` network (use this instead of docker-compose.yml
+# when the infra already runs elsewhere):
+#
+#   docker compose -f docker-compose.infra.yml up -d --build
+#
+# If your Ollama/Qdrant service names on that network are not `ollama`/`qdrant`,
+# override them, e.g.:  QDRANT_HOST=my-qdrant OLLAMA_URL=http://my-ollama:11434/ docker compose ...
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - Ollama__Url=${OLLAMA_URL:-http://ollama:11434/}
+      - Ollama__ChatModel=${OLLAMA_CHAT_MODEL:-qwen2.5}
+      - Ollama__EmbedModel=${OLLAMA_EMBED_MODEL:-bge-m3}
+      - Qdrant__Host=${QDRANT_HOST:-qdrant}
+      - Qdrant__Port=${QDRANT_PORT:-6334}
+      - Qdrant__Collection=aimemory
+      - Qdrant__VectorSize=1024
+      - BlobStore__Root=/data/blobs
+    volumes:
+      - blob-data:/data/blobs
+    networks:
+      - infra
+
+networks:
+  infra:
+    name: personalcommandcenter_default
+    external: true
+
+volumes:
+  blob-data:
