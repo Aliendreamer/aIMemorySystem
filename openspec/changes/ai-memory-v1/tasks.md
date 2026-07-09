@@ -41,9 +41,9 @@
 
 ## 7. Decision extraction (TDD)
 
-- [ ] 7.1 Write tests: declined item → `declined` record; ADR limitation → `constraint` record; routine text → nothing
-- [ ] 7.2 Write tests: model output validated against the decision-record JSON schema; invalid output rejected, not stored
-- [ ] 7.3 Implement `DecisionExtractor` using `LocalChatModel` with the fixed schema and typed-edge capture (`supersedes` etc.)
+- [x] 7.1 Write tests: declined item → `declined` record; ADR limitation → `constraint` record; routine text → nothing
+- [x] 7.2 Write tests: model output validated against the decision-record JSON schema; invalid output rejected, not stored
+- [x] 7.3 Implement `DecisionExtractor` using `LocalChatModel` with the fixed schema and typed-edge capture (`supersedes` etc.) — over `IChatModel`; real `LocalChatModel` HTTP client is task 4.4
 
 ## 8. Query / RAG (TDD)
 
