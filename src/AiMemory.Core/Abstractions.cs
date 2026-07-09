@@ -61,11 +61,14 @@ public interface IVectorStore
         CancellationToken ct = default);
 }
 
+/// <summary>Result of persisting a blob: the path to retrieve it by and its byte length.</summary>
+public sealed record BlobInfo(string VolumePath, long Size);
+
 /// <summary>Stores attachment binaries on a self-hostable volume.</summary>
 public interface IBlobStore
 {
-    /// <summary>Saves content and returns the volume path it can be retrieved by.</summary>
-    Task<string> SaveAsync(string relativePath, Stream content, CancellationToken ct = default);
+    /// <summary>Saves content and returns its retrieval path and byte length.</summary>
+    Task<BlobInfo> SaveAsync(string relativePath, Stream content, CancellationToken ct = default);
 
     Task<Stream> OpenAsync(string volumePath, CancellationToken ct = default);
 }

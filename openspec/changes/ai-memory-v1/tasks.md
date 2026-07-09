@@ -15,8 +15,8 @@
 
 - [ ] 3.1 Write tests (against a disposable Qdrant instance) for upsert + payload-filtered retrieval by `project`/`item_type`/`state`
 - [ ] 3.2 Implement `QdrantVectorStore` (collection setup, dense + optional sparse vectors, payload mapping)
-- [ ] 3.3 Write tests for blob round-trip (store binary → retrieve by `volume_path`)
-- [ ] 3.4 Implement `IBlobStore` with a filesystem-volume adapter (MinIO adapter behind the same interface)
+- [x] 3.3 Write tests for blob round-trip (store binary → retrieve by `volume_path`)
+- [x] 3.4 Implement `IBlobStore` with a filesystem-volume adapter (MinIO adapter behind the same interface) — filesystem adapter done; MinIO adapter deferred behind `IBlobStore`
 
 ## 4. AI clients (TDD)
 
@@ -35,8 +35,8 @@
 
 ## 6. Ingestion pipeline (TDD)
 
-- [ ] 6.1 Write tests for chunking (long doc → multiple chunks, parent link preserved) and implement `Chunker`
-- [ ] 6.2 Write tests for attachment store-and-link (binary saved, linked via `attachment_of`, no extraction) and implement it
+- [x] 6.1 Write tests for chunking (long doc → multiple chunks, parent link preserved) and implement `Chunker`
+- [x] 6.2 Write tests for attachment store-and-link (binary saved, linked via `attachment_of`, no extraction) and implement it
 - [ ] 6.3 Implement the ingestion orchestrator: connector → normalize → chunk → (extract) → embed → store, per configured project
 
 ## 7. Decision extraction (TDD)
