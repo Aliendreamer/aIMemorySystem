@@ -37,7 +37,7 @@
 
 - [x] 6.1 Write tests for chunking (long doc → multiple chunks, parent link preserved) and implement `Chunker`
 - [x] 6.2 Write tests for attachment store-and-link (binary saved, linked via `attachment_of`, no extraction) and implement it
-- [ ] 6.3 Implement the ingestion orchestrator: connector → normalize → chunk → (extract) → embed → store, per configured project
+- [x] 6.3 Implement the ingestion orchestrator: connector → normalize → chunk → (extract) → embed → store, per configured project — `IngestionOrchestrator` with per-record + per-flush failure isolation and BatchSize-capped upserts
 
 ## 7. Decision extraction (TDD)
 
