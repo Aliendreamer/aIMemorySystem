@@ -1,0 +1,41 @@
+# ---- .NET ----
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+.vs/
+[Tt]est[Rr]esults/
+*.nupkg
+
+# ---- IDE / editor ----
+.idea/
+.vscode/
+
+# ---- OS / shell / personal (not part of this project) ----
+.bash_profile
+.bashrc
+.profile
+.zprofile
+.zshrc
+.gitconfig
+.ripgreprc
+
+# ---- Local agent / machine config (not shared) ----
+.mcp.json
+.claude/skills/
+.claude/plugins/
+.claude/agents/
+.claude/commands/
+
+# ---- Secrets ----
+secrets.json
+*.secret
+.env
+.env.*
+
+# ---- Local data / model artifacts ----
+data/
+blobstore/
+*.gguf

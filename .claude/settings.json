@@ -1,0 +1,104 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": false,
+    "allowUnsandboxedCommands": false,
+    "network": {
+      "allowedDomains": [
+        "*.githubusercontent.com",
+        "*.npmjs.org",
+        "codeload.github.com",
+        "files.pythonhosted.org",
+        "github.com",
+        "pypi.org",
+        "registry.npmjs.org",
+        "registry.yarnpkg.com"
+      ]
+    },
+    "filesystem": {
+      "allowWrite": [
+        "/usr/local/share/.yarn-global",
+        "~/.cache",
+        "~/.local/share/pnpm",
+        "~/.npm"
+      ]
+    }
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git*)",
+      "SKILL(*)",
+      "mcp__azure-devops__core_list_projects",
+      "mcp__azure-devops__search_workitem",
+      "mcp__azure-devops__wit_get_work_item",
+      "mcp__azure-devops__wit_get_work_item_attachment",
+      "mcp__azure-devops__wit_get_work_items_batch_by_ids",
+      "mcp__azure-devops__wit_list_work_item_comments",
+      "mcp__azure-devops__wit_query_by_wiql",
+      "mcp__plugin_serena_serena__*"
+    ],
+    "deny": [
+      "Bash(git branch --delete --force*)",
+      "Bash(git branch -D*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf*)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"MANDATORY dev-flow for code work (.claude development-flow skill), ordered + gated: 1) align via superpowers:brainstorming before touching files; 2) document the change — OpenSpec /opsx:propose for non-trivial work (tiny fixes may skip); 3) implement with TDD (red-green-refactor) — if a web endpoint was added or changed, create/update its .http file; 4) /simplify then /code-review; 5) discover the repo gates from CI/scripts and run build+lint+typecheck+tests; 6) report done/passed/pending; 7) wait for user approval + manual verification before /opsx:archive and commit. Use Serena semantic tools (find_symbol, get_symbols_overview, replace_symbol_body, find_referencing_symbols, search_for_pattern) for ALL code search and edits — never raw grep or hand-editing. Done = gates green, output seen, user verified.\"}}'",
+            "statusMessage": "Loading development flow"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"Per CLAUDE.md, prefer Serena (search_for_pattern / find_symbol / find_referencing_symbols) for CODE search; raw grep is fine for configs and non-code.\"},\"suppressOutput\":true}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "c=$(jq -r '.tool_input.command // empty' 2>/dev/null); printf '%s' \"$c\" | grep -Eq '(^|[|&; ])(grep|egrep|fgrep|rg)( |$)' && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"Per CLAUDE.md, prefer Serena (search_for_pattern / find_symbol) for CODE search; raw grep/rg is fine for configs and non-code.\"},\"suppressOutput\":true}'; exit 0"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "serena@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "qdrant-skills@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "microsoft-docs@claude-plugins-official": true,
+    "mcp-server-dev@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": false,
+    "csharp-lsp@claude-plugins-official": false,
+    "dotnet-aspnet@dotnet-agent-skills": false,
+    "dotnet-data@dotnet-agent-skills": false,
+    "dotnet-maui@dotnet-agent-skills": false,
+    "remember@claude-plugins-official": false,
+    "cloudflare@claude-plugins-official": false
+  }
+}
