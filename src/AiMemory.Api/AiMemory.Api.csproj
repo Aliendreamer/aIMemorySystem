@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AiMemory.Core\AiMemory.Core.csproj" />
+    <ProjectReference Include="..\AiMemory.Connectors\AiMemory.Connectors.csproj" />
+    <ProjectReference Include="..\AiMemory.Ingestion\AiMemory.Ingestion.csproj" />
+    <ProjectReference Include="..\AiMemory.Storage\AiMemory.Storage.csproj" />
+    <ProjectReference Include="..\AiMemory.Ai\AiMemory.Ai.csproj" />
+    <ProjectReference Include="..\AiMemory.Query\AiMemory.Query.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

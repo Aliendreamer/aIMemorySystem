@@ -4,7 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-Greenfield. As of this writing the repo contains only `README.md`, `LICENSE` (Apache 2.0), and `x.drawio` — a design sketch. There is **no source code, build system, dependency manifest, or tests yet.** Do not assume any tooling exists; when you add the first code, you are also choosing the stack, and that decision should be made deliberately (ask the user if unspecified). Update this file with real build/test/run commands as soon as they exist.
+Implementation started. Stack: **.NET 10 / C#**, a modular-monolith solution `AiMemory.slnx` with projects under `src/` (`AiMemory.Core`, `.Connectors`, `.Ingestion`, `.Storage`, `.Ai`, `.Query`, `.Api`) and tests under `tests/AiMemory.Tests` (xUnit). The v1 plan lives in the OpenSpec change `openspec/changes/ai-memory-v1/` (proposal, design, specs, tasks) — read it before working. So far only **Group 1 (scaffolding)** and **Group 2 (core domain + interfaces)** are implemented; Groups 3–11 (storage, AI clients, connectors, ingestion, extraction, query, API, infra, litmus) are pending and need running infra (Qdrant, local model + embedding servers, ADO/GitHub MCP).
+
+### Build / test
+
+```bash
+# This WSL2 sandbox blocks the socket()/named-pipe IPC that MSBuild's worker nodes,
+# the Roslyn compiler server, and node reuse rely on, so builds MUST run single-proc,
+# in-proc, with the build server disabled. Shared-compilation and SCM git queries are
+# already turned off in Directory.Build.props.
+export DOTNET_CLI_USE_MSBUILD_SERVER=0 MSBUILDDISABLENODEREUSE=1
+
+dotnet build AiMemory.slnx -m:1 -nr:false          # quality gate: compile
+dotnet test tests/AiMemory.Tests/AiMemory.Tests.csproj --no-restore -m:1 -nr:false   # quality gate: tests
+```
+
+NuGet can't reach `api.nuget.org` in the sandbox (NU1900 warnings are harmless); restore works from the populated `~/.nuget` cache. New packages must be added in an environment with network access. Prefer Serena semantic tools over raw grep for code (per the workflow block below).
 
 ## What this project is meant to be
 

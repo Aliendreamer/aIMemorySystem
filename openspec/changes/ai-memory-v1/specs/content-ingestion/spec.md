@@ -26,6 +26,10 @@ The system SHALL normalize every fetched item into a single canonical record sch
 - **WHEN** items with source-specific states (e.g. `Removed`, `Closed`, `wontfix`) are ingested
 - **THEN** each record carries a normalized `state` value drawn from a fixed vocabulary
 
+#### Scenario: GitHub declined state derives from the close reason
+- **WHEN** a GitHub issue is closed with reason "not planned" (its state and state-reason are ingested together)
+- **THEN** its normalized `state` is `Declined`, and a merged pull request normalizes to `Closed`
+
 ### Requirement: Ingest in-repo knowledge artifacts
 The system SHALL detect and ingest in-repo knowledge artifacts as canonical records with `item_type = repo_knowledge` and a `doc_kind` tag, covering at least: Serena memories (`.serena/memories/*.md`), agent-instruction files (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.cursor/rules/*`), and OpenSpec artifacts (`openspec/specs/**`, `openspec/changes/**` including proposal/design/specs/tasks). New `doc_kind` values SHALL be addable without schema changes.
 

@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AiMemory.Ai/AiMemory.Ai.csproj" />
+    <Project Path="src/AiMemory.Api/AiMemory.Api.csproj" />
+    <Project Path="src/AiMemory.Connectors/AiMemory.Connectors.csproj" />
+    <Project Path="src/AiMemory.Core/AiMemory.Core.csproj" />
+    <Project Path="src/AiMemory.Ingestion/AiMemory.Ingestion.csproj" />
+    <Project Path="src/AiMemory.Query/AiMemory.Query.csproj" />
+    <Project Path="src/AiMemory.Storage/AiMemory.Storage.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AiMemory.Tests/AiMemory.Tests.csproj" />
+  </Folder>
+</Solution>

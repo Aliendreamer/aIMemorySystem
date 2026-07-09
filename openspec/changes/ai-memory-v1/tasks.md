@@ -1,15 +1,15 @@
 ## 1. Solution scaffolding
 
-- [ ] 1.1 Create the .NET solution `AiMemory.sln` and the project skeletons: `AiMemory.Core`, `.Connectors`, `.Ingestion`, `.Storage`, `.Ai`, `.Query`, `.Api`, `.Tests`
-- [ ] 1.2 Wire project references (Core has no deps; Api references Query/Ingestion/Storage/Ai/Connectors) and add xUnit + the test runner to `.Tests`
-- [ ] 1.3 Add `.editorconfig`, nullable + analyzers enabled, and confirm `dotnet build` + `dotnet test` run green as the repo quality gates
-- [ ] 1.4 Update `CLAUDE.md` "Project status" with the real build/test/run commands
+- [x] 1.1 Create the .NET solution `AiMemory.slnx` and the project skeletons: `AiMemory.Core`, `.Connectors`, `.Ingestion`, `.Storage`, `.Ai`, `.Query`, `.Api`, `.Tests`
+- [x] 1.2 Wire project references (Core has no deps; Api references Query/Ingestion/Storage/Ai/Connectors) and add xUnit + the test runner to `.Tests`
+- [x] 1.3 Add `.editorconfig`, nullable + analyzers enabled, and confirm `dotnet build` + `dotnet test` run green as the repo quality gates
+- [x] 1.4 Update `CLAUDE.md` "Project status" with the real build/test/run commands
 
 ## 2. Core domain (TDD)
 
-- [ ] 2.1 Write tests for the canonical record type and its normalized `state` vocabulary
-- [ ] 2.2 Implement `MemoryRecord` (fields: project, source, source_id/url, item_type, doc_kind, title, text, state, created/updated, author, links, decision fields, attachment metadata) and edge fields (`declines`/`supersedes`/`caused_by`/`linked_*`)
-- [ ] 2.3 Define interfaces: `IConnector`, `IChunker`, `IDecisionExtractor`, `IEmbedder`, `IVectorStore`, `IBlobStore`, `IChatModel`
+- [x] 2.1 Write tests for the canonical record type and its normalized `state` vocabulary
+- [x] 2.2 Implement `MemoryRecord` (fields: project, source, source_id/url, item_type, doc_kind, title, text, state, created/updated, author, links, decision fields, attachment metadata) and edge fields (`declines`/`supersedes`/`caused_by`/`linked_*`)
+- [x] 2.3 Define interfaces: `IConnector`, `IChunker`, `IDecisionExtractor`, `IEmbedder`, `IVectorStore`, `IBlobStore`, `IChatModel`
 
 ## 3. Storage adapters (TDD)
 

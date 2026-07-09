@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <!-- This sandboxed WSL2 env blocks socket()/named pipes and mounts /dev/null over .gitmodules.
+         Disable the compiler server and SCM git queries so builds run fully in-proc. -->
+    <UseSharedCompilation>false</UseSharedCompilation>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+  </PropertyGroup>
+</Project>
