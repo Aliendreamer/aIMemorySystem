@@ -31,7 +31,7 @@
 - [ ] 5.2 Implement `GitHubConnector` over the GitHub MCP server (issues +comments +state, commits, repo docs) end-to-end
 - [ ] 5.3 Write tests for normalizing an Azure DevOps work item/commit/doc into `MemoryRecord`
 - [ ] 5.4 Implement `AzureDevOpsConnector` over the Azure DevOps MCP server behind the same `IConnector`
-- [ ] 5.5 Write tests + implement detection of in-repo knowledge artifacts (Serena memories, agent-instruction files, OpenSpec) → `repo_knowledge` with correct `doc_kind`
+- [x] 5.5 Write tests + implement detection of in-repo knowledge artifacts (Serena memories, agent-instruction files, OpenSpec) → `repo_knowledge` with correct `doc_kind`
 
 ## 6. Ingestion pipeline (TDD)
 
