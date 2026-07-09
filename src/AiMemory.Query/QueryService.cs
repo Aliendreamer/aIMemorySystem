@@ -16,12 +16,18 @@ public sealed record Citation(string SourceId, string? Title, string? Url);
 /// <summary>An answer with its grounding. <see cref="HasEvidence"/> is false when nothing was retrieved.</summary>
 public sealed record QueryAnswer(string Summary, IReadOnlyList<Citation> Citations, bool HasEvidence);
 
+/// <summary>Answers the per-project questions v1 supports.</summary>
+public interface IQueryService
+{
+    Task<QueryAnswer> AnswerAsync(string project, QuestionKind kind, CancellationToken ct = default);
+}
+
 /// <summary>
 /// Answers a per-project question by embedding it, retrieving matching records with
 /// a payload filter, and summarizing them with a self-hosted model — grounded in
 /// citations. When nothing is retrieved it says so rather than fabricating an answer.
 /// </summary>
-public sealed class QueryService
+public sealed class QueryService : IQueryService
 {
     private const int RetrievalLimit = 12;
     private const int MaxEvidenceCharsPerChunk = 2000;

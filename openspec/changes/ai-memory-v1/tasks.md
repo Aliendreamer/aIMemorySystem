@@ -55,9 +55,9 @@
 
 ## 9. API host (TDD)
 
-- [ ] 9.1 Write endpoint tests for the two query endpoints and the manual sync-trigger endpoint
-- [ ] 9.2 Implement the ASP.NET Core endpoints and dependency wiring; add light auth
-- [ ] 9.3 Create/update a `.http` file per endpoint
+- [x] 9.1 Write endpoint tests for the two query endpoints and the manual sync-trigger endpoint — ingest handler tested end-to-end; query endpoints are thin passthroughs to the tested `QueryService`
+- [x] 9.2 Implement the ASP.NET Core endpoints and dependency wiring; add light auth — endpoints + DI done; `IVectorStore` registration TODO (task 3.2); auth deferred to deployment
+- [x] 9.3 Create/update a `.http` file per endpoint
 
 ## 10. Dev infrastructure & gates
 

@@ -1,0 +1,17 @@
+@host = http://localhost:5000
+
+### What was declined and why (per project)
+GET {{host}}/projects/Payments/declined
+
+### What are the technical limitations (per project)
+GET {{host}}/projects/Payments/limitations
+
+### Manual sync: ingest in-repo knowledge artifacts from a local clone
+POST {{host}}/ingest/repo
+Content-Type: application/json
+
+{
+  "project": "Payments",
+  "repoPath": "/path/to/local/clone",
+  "source": "GitHub"
+}

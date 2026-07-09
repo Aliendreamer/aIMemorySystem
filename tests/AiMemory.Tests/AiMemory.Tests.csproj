@@ -25,6 +25,7 @@
     <ProjectReference Include="..\..\src\AiMemory.Storage\AiMemory.Storage.csproj" />
     <ProjectReference Include="..\..\src\AiMemory.Ai\AiMemory.Ai.csproj" />
     <ProjectReference Include="..\..\src\AiMemory.Query\AiMemory.Query.csproj" />
+    <ProjectReference Include="..\..\src\AiMemory.Api\AiMemory.Api.csproj" />
   </ItemGroup>
 
 </Project>
