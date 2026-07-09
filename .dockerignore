@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/.vs/
+.git/
+.idea/
+.vscode/
+data/
+blobstore/
+*.user

@@ -61,7 +61,7 @@
 
 ## 10. Dev infrastructure & gates
 
-- [ ] 10.1 Add `docker-compose` for the self-hosted dependencies (Qdrant, blob store, local model + embedding servers)
+- [x] 10.1 Add `docker-compose` for the self-hosted dependencies (Qdrant, blob store, local model + embedding servers) — `docker-compose.yml` + `Dockerfile` + `.dockerignore` (deploy stack; local dev points at existing infra)
 - [ ] 10.2 Document run/config in `CLAUDE.md`/README (connections, model choices, project config)
 - [ ] 10.3 Run the full quality gates (build + tests) green and record any pending items
 
