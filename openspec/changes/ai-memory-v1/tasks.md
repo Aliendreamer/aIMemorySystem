@@ -20,10 +20,10 @@
 
 ## 4. AI clients (TDD)
 
-- [ ] 4.1 Write tests for the embedding client against a local BGE-M3 server (dense + sparse output)
-- [ ] 4.2 Implement `BgeM3Embedder` (HTTP to the local embedding server)
-- [ ] 4.3 Write tests for the chat client enforcing constrained JSON output and schema validation
-- [ ] 4.4 Implement `LocalChatModel` (Ollama `format:json` / vLLM guided decoding) with validate-and-drop on invalid output
+- [x] 4.1 Write tests for the embedding client against a local BGE-M3 server (dense + sparse output) — dense via Ollama; sparse not exposed by Ollama (noted)
+- [x] 4.2 Implement `BgeM3Embedder` (HTTP to the local embedding server) — `OllamaEmbedder` (`/api/embed`)
+- [x] 4.3 Write tests for the chat client enforcing constrained JSON output and schema validation
+- [x] 4.4 Implement `LocalChatModel` (Ollama `format:json` / vLLM guided decoding) with validate-and-drop on invalid output — `OllamaChatModel` (`/api/chat`, `think:false`, schema `format`); validate-and-drop lives in `DecisionExtractor`
 
 ## 5. Connectors via MCP (TDD)
 
