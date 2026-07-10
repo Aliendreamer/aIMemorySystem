@@ -29,6 +29,7 @@ public sealed class QdrantVectorStore : IVectorStore
     private const string KeyUrl = "url";
     private const string KeyDecisionType = "decision_type";
     private const string KeyDecisionRationale = "decision_rationale";
+    private const string KeyContentHash = "content_hash";
 
     private readonly QdrantClient _client;
     private readonly string _collection;
@@ -82,6 +83,38 @@ public sealed class QdrantVectorStore : IVectorStore
         return results.Select(p => new RetrievedChunk(ToRecord(p.Payload), p.Score)).ToArray();
     }
 
+    public async Task<IReadOnlyDictionary<string, string>> GetExistingHashesAsync(
+        IReadOnlyCollection<string> recordIds, CancellationToken ct = default)
+    {
+        var result = new Dictionary<string, string>();
+        if (recordIds.Count == 0)
+        {
+            return result;
+        }
+
+        // Map each record id to its point uuid so results can be mapped back.
+        var byPointUuid = new Dictionary<string, string>();
+        foreach (var id in recordIds)
+        {
+            byPointUuid[ToPointId(id).ToString()] = id;
+        }
+
+        var pointIds = byPointUuid.Keys.Select(uuid => new PointId { Uuid = uuid }).ToList();
+        var points = await _client.RetrieveAsync(
+            _collection, pointIds, withPayload: true, withVectors: false, cancellationToken: ct);
+
+        foreach (var point in points)
+        {
+            if (byPointUuid.TryGetValue(point.Id.Uuid, out var recordId) &&
+                point.Payload.TryGetValue(KeyContentHash, out var hash))
+            {
+                result[recordId] = hash.StringValue;
+            }
+        }
+
+        return result;
+    }
+
     internal static PointStruct ToPoint(EmbeddedRecord embedded)
     {
         var r = embedded.Record;
@@ -99,6 +132,7 @@ public sealed class QdrantVectorStore : IVectorStore
         point.Payload.Add(KeyDocKind, r.DocKind.ToString());
         point.Payload.Add(KeyState, r.State.ToString());
         point.Payload.Add(KeyText, r.Text);
+        point.Payload.Add(KeyContentHash, Hashing.ContentHash(r.Text));
         if (r.Title is not null)
         {
             point.Payload.Add(KeyTitle, r.Title);

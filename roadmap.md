@@ -86,8 +86,10 @@ says *what* changed; the connector fetches the actual item via MCP.
 
 ## Quality & efficiency (v2)
 
-- **Change detection:** skip unchanged files (by content hash / last commit) so
-  scheduled syncs don't re-embed everything.
+- **Change detection — DONE:** each chunk stores a `content_hash`; ingest skips
+  unchanged chunks (and skips extraction entirely when a whole record is unchanged),
+  so scheduled re-syncs don't re-embed. Verified: an unchanged re-ingest went from
+  ~145s to ~0.06s (37 stored → 37 skipped, zero model calls).
 - **Attachment content:** OCR (images) and text extraction (PDF/docx); audio/video
   transcription — currently store-and-link only.
 - **Recall / answers:** semantic fallback added; next is tuning the extraction and

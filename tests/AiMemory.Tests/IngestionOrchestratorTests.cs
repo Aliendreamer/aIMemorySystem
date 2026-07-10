@@ -49,6 +49,36 @@ public class IngestionOrchestratorTests
             throw new NotSupportedException();
     }
 
+    private sealed class PrefilledStore(IReadOnlyDictionary<string, string> hashes) : IVectorStore
+    {
+        public List<EmbeddedRecord> Upserted { get; } = [];
+
+        public Task EnsureInitializedAsync(CancellationToken ct = default) => Task.CompletedTask;
+
+        public Task UpsertAsync(IReadOnlyCollection<EmbeddedRecord> records, CancellationToken ct = default)
+        {
+            Upserted.AddRange(records);
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<RetrievedChunk>> SearchAsync(EmbeddingVector query, RetrievalFilter filter, int limit, CancellationToken ct = default) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyDictionary<string, string>> GetExistingHashesAsync(IReadOnlyCollection<string> recordIds, CancellationToken ct = default) =>
+            Task.FromResult(hashes);
+    }
+
+    private sealed class CountingExtractor : IDecisionExtractor
+    {
+        public int Calls { get; private set; }
+
+        public Task<DecisionInfo?> ExtractAsync(MemoryRecord record, CancellationToken ct = default)
+        {
+            Calls++;
+            return Task.FromResult<DecisionInfo?>(null);
+        }
+    }
+
     private static MemoryRecord Record(string id, string text) => new()
     {
         Id = id,
@@ -125,6 +155,25 @@ public class IngestionOrchestratorTests
 
         Assert.Equal(0, result.ChunksStored);
         Assert.Empty(store.Upserted);
+    }
+
+    [Fact]
+    public async Task Ingest_UnchangedChunk_IsSkipped_NoExtractionNoUpsert()
+    {
+        var record = Record("r1", "hello");   // short text → single chunk with Id "r1"
+        var store = new PrefilledStore(new Dictionary<string, string>
+        {
+            ["r1"] = Hashing.ContentHash("hello"),   // already stored with the same content
+        });
+        var extractor = new CountingExtractor();
+        var orchestrator = new IngestionOrchestrator(new Chunker(), extractor, new FakeEmbedder(), store);
+
+        var result = await orchestrator.IngestAsync(Stream(record));
+
+        Assert.Equal(0, result.ChunksStored);
+        Assert.Equal(1, result.ChunksSkipped);
+        Assert.Empty(store.Upserted);       // nothing re-embedded/re-upserted
+        Assert.Equal(0, extractor.Calls);   // extraction skipped for the unchanged record
     }
 
     [Fact]

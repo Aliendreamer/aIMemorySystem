@@ -4,9 +4,10 @@ namespace AiMemory.Ingestion;
 
 /// <summary>
 /// Outcome of an ingestion run. <see cref="RecordsFailed"/> counts records that failed
-/// during processing; <see cref="ChunksDropped"/> counts embedded chunks that failed to persist.
+/// during processing; <see cref="ChunksDropped"/> counts embedded chunks that failed to
+/// persist; <see cref="ChunksSkipped"/> counts unchanged chunks that were not re-embedded.
 /// </summary>
-public sealed record IngestionResult(int ChunksStored, int RecordsFailed, int ChunksDropped);
+public sealed record IngestionResult(int ChunksStored, int RecordsFailed, int ChunksDropped, int ChunksSkipped);
 
 /// <summary>
 /// Drives the per-record pipeline: extract a decision from the whole record, attach it,
@@ -43,15 +44,17 @@ public sealed class IngestionOrchestrator
         var stored = 0;
         var recordsFailed = 0;
         var dropped = 0;
+        var skipped = 0;
 
         await foreach (var record in records.WithCancellation(ct))
         {
             List<EmbeddedRecord> processed;
+            int recordSkipped;
             try
             {
-                // Build the record's chunks fully before touching the shared batch, so a
-                // mid-record failure stores nothing partial for that record.
-                processed = await ProcessRecordAsync(record, ct);
+                // Build the record's changed chunks fully before touching the shared batch,
+                // so a mid-record failure stores nothing partial for that record.
+                (processed, recordSkipped) = await ProcessRecordAsync(record, ct);
             }
             catch (Exception) when (!ct.IsCancellationRequested)
             {
@@ -59,6 +62,7 @@ public sealed class IngestionOrchestrator
                 continue;
             }
 
+            skipped += recordSkipped;
             batch.AddRange(processed);
             while (batch.Count >= BatchSize)
             {
@@ -71,7 +75,7 @@ public sealed class IngestionOrchestrator
             (stored, dropped) = await FlushAsync(batch, stored, dropped, ct);
         }
 
-        return new IngestionResult(stored, recordsFailed, dropped);
+        return new IngestionResult(stored, recordsFailed, dropped, skipped);
     }
 
     // Removes and returns up to BatchSize items from the front, so a single high-chunk
@@ -100,21 +104,36 @@ public sealed class IngestionOrchestrator
         }
     }
 
-    private async Task<List<EmbeddedRecord>> ProcessRecordAsync(MemoryRecord record, CancellationToken ct)
+    private async Task<(List<EmbeddedRecord> Processed, int Skipped)> ProcessRecordAsync(MemoryRecord record, CancellationToken ct)
     {
-        // Extract on the whole record (a decision spans the document) then propagate to
-        // every chunk, so declined/constraint records stay filterable after chunking.
-        var decision = await _extractor.ExtractAsync(record, ct);
-        var enriched = decision is null ? record : record with { Decision = decision };
+        // Chunk first (cheap, no model call) and skip chunks whose text is unchanged since
+        // last ingest. If the whole record is unchanged, skip the extraction call too.
+        var chunks = _chunker.Chunk(record).ToList();
+        var existing = await _store.GetExistingHashesAsync(chunks.Select(c => c.Id).ToArray(), ct);
 
-        var processed = new List<EmbeddedRecord>();
-        foreach (var chunk in _chunker.Chunk(enriched))
+        var changed = chunks
+            .Where(c => !existing.TryGetValue(c.Id, out var hash) || hash != Hashing.ContentHash(c.Text))
+            .ToList();
+        var skipped = chunks.Count - changed.Count;
+
+        if (changed.Count == 0)
         {
-            var vector = await _embedder.EmbedAsync(EmbedText(chunk), ct);
-            processed.Add(new EmbeddedRecord(chunk, vector));
+            return (new List<EmbeddedRecord>(), skipped);
         }
 
-        return processed;
+        // Extract on the whole record (a decision spans the document) and propagate to the
+        // changed chunks, so declined/constraint records stay filterable after chunking.
+        var decision = await _extractor.ExtractAsync(record, ct);
+
+        var processed = new List<EmbeddedRecord>();
+        foreach (var chunk in changed)
+        {
+            var enriched = decision is null ? chunk : chunk with { Decision = decision };
+            var vector = await _embedder.EmbedAsync(EmbedText(enriched), ct);
+            processed.Add(new EmbeddedRecord(enriched, vector));
+        }
+
+        return (processed, skipped);
     }
 
     private static string EmbedText(MemoryRecord record) =>

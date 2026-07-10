@@ -50,6 +50,16 @@ public class QdrantVectorStoreTests
     }
 
     [Fact]
+    public void ToPoint_StoresContentHashForChangeDetection()
+    {
+        var record = Sample();
+        var point = QdrantVectorStore.ToPoint(new EmbeddedRecord(record, new EmbeddingVector([0.1f])));
+
+        Assert.True(point.Payload.ContainsKey("content_hash"));
+        Assert.Equal(Hashing.ContentHash(record.Text), point.Payload["content_hash"].StringValue);
+    }
+
+    [Fact]
     public void ToRecord_UnknownDecisionType_DropsDecisionNotMislabels()
     {
         var point = QdrantVectorStore.ToPoint(new EmbeddedRecord(Sample(), new EmbeddingVector([0.1f])));

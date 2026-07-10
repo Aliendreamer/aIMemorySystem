@@ -59,6 +59,14 @@ public interface IVectorStore
         RetrievalFilter filter,
         int limit,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Returns the stored content hash for each given record id that already exists, for
+    /// change-detection. Default: an empty map (no index — every record treated as changed).
+    /// </summary>
+    Task<IReadOnlyDictionary<string, string>> GetExistingHashesAsync(
+        IReadOnlyCollection<string> recordIds, CancellationToken ct = default) =>
+        Task.FromResult<IReadOnlyDictionary<string, string>>(new Dictionary<string, string>());
 }
 
 /// <summary>Result of persisting a blob: the path to retrieve it by and its byte length.</summary>
