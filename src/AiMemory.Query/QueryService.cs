@@ -33,8 +33,11 @@ public sealed class QueryService : IQueryService
     private const int MaxEvidenceCharsPerChunk = 2000;
 
     private const string SystemPrompt =
-        "Answer the question using ONLY the provided project evidence. " +
-        "Cite what the evidence supports and do not invent facts. Be concise.";
+        "You answer a question about a software project using ONLY the evidence provided. " +
+        "State the concrete facts the evidence supports — the specific work that was declined " +
+        "and the reasons, or the specific technical limitations. Do NOT describe how any system " +
+        "or tool works, do NOT restate the question, and do NOT invent anything. If the evidence " +
+        "contains no concrete answer, say so in one sentence. Be concise.";
 
     private readonly IEmbedder _embedder;
     private readonly IVectorStore _store;
