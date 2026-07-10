@@ -59,9 +59,10 @@ public sealed class AiMemoryEndpointsTests : IDisposable
     {
         var store = new CountingStore();
         var orchestrator = new IngestionOrchestrator(new Chunker(), new NullExtractor(), new FixedEmbedder(), store);
+        var ingestor = new RepoIngestor(new RepoKnowledgeScanner(), orchestrator);
         var request = new IngestRepoRequest("Payments", _repo, SourceKind.GitHub);
 
-        var result = await AiMemoryEndpoints.IngestRepoAsync(request, new RepoKnowledgeScanner(), orchestrator, CancellationToken.None);
+        var result = await AiMemoryEndpoints.IngestRepoAsync(request, ingestor, CancellationToken.None);
 
         Assert.Equal(2, result.ChunksStored);        // CLAUDE.md + README.md; code.cs skipped
         Assert.Equal(0, result.RecordsFailed);

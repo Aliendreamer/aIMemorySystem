@@ -1,4 +1,3 @@
-using AiMemory.Connectors;
 using AiMemory.Core;
 using AiMemory.Ingestion;
 using AiMemory.Query;
@@ -21,25 +20,11 @@ public static class AiMemoryEndpoints
         app.MapPost("/ingest/repo", IngestRepoAsync);
     }
 
-    // Manual/triggered sync (v1): scan a locally-cloned repo's knowledge artifacts and
-    // run them through the ingestion pipeline. Static + explicit deps so it is testable.
+    // Manual/triggered sync: the on-demand escape hatch over the same RepoIngestor
+    // the scheduled BackgroundService uses.
     public static Task<IngestionResult> IngestRepoAsync(
         IngestRepoRequest request,
-        RepoKnowledgeScanner scanner,
-        IngestionOrchestrator orchestrator,
-        CancellationToken ct)
-    {
-        var records = scanner.Scan(request.RepoPath, request.Project, request.Source);
-        return orchestrator.IngestAsync(ToAsyncEnumerable(records), ct);
-    }
-
-    private static async IAsyncEnumerable<MemoryRecord> ToAsyncEnumerable(IEnumerable<MemoryRecord> records)
-    {
-        foreach (var record in records)
-        {
-            yield return record;
-        }
-
-        await Task.CompletedTask;
-    }
+        RepoIngestor ingestor,
+        CancellationToken ct) =>
+        ingestor.IngestAsync(request.Project, request.RepoPath, request.Source, ct);
 }

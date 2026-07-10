@@ -391,3 +391,9 @@ dotnet_naming_style.s_camelcase.capitalization = camel_case
 # xUnit test method names use underscores by convention.
 [tests/**.cs]
 dotnet_diagnostic.CA1707.severity = none
+
+# High-performance logging source-generators (LoggerMessage) are unwarranted for
+# this app's low-frequency, non-hot-path logging.
+[*.cs]
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1873.severity = none

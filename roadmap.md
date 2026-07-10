@@ -14,10 +14,14 @@ duplicates. Everything below is just a different way to *trigger* that same oper
 `POST /ingest/repo { project, repoPath, source }` — on-demand ingest of a local
 clone. Stays as the escape hatch for backfills and debugging.
 
-### 2. Scheduled (poll) — PLANNED (phase 1, next)
+### 2. Scheduled (poll) — DONE (phase 1)
 
-A `BackgroundService` (`RepoSyncService`) that, on a configurable interval, runs the
-ingest for every configured source.
+A `BackgroundService` (`RepoSyncBackgroundService`) that, on a configurable interval,
+runs `RepoSyncJob` over every configured repo (update via `IRepoUpdater` → ingest via
+the shared `RepoIngestor`). Configured under `RepoSync` (`IntervalMinutes` + `Repos`);
+disabled when no repos are set. Per-repo failures are isolated; a missing path is a
+failure, not a silent no-op. `NoOpRepoUpdater` scans local paths as-is; a git-pull
+updater slots in behind `IRepoUpdater`.
 
 - **Pros:** dead reliable; needs no public ingress (fits a self-hosted tool); handles
   backfill; *is* the reconcile safety net that event-driven sync always needs.

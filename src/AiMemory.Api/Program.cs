@@ -39,6 +39,13 @@ builder.Services.AddSingleton(_ => new QdrantClient(qdrantHost, qdrantPort));
 builder.Services.AddSingleton<IVectorStore>(sp =>
     new QdrantVectorStore(sp.GetRequiredService<QdrantClient>(), qdrantCollection, embedDimensions));
 
+// Scheduled sync: ingest configured repos on an interval (disabled when none configured).
+builder.Services.Configure<RepoSyncOptions>(builder.Configuration.GetSection("RepoSync"));
+builder.Services.AddSingleton<RepoIngestor>();
+builder.Services.AddSingleton<IRepoUpdater, NoOpRepoUpdater>();
+builder.Services.AddSingleton<RepoSyncJob>();
+builder.Services.AddHostedService<RepoSyncBackgroundService>();
+
 var app = builder.Build();
 app.MapAiMemory();
 app.Run();
