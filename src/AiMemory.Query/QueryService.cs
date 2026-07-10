@@ -63,6 +63,15 @@ public sealed class QueryService : IQueryService
 
         if (hits is null || hits.Count == 0)
         {
+            // Recall fallback: the decision-type filter misses records the extractor
+            // never tagged. Re-search scoped to the project only so relevant declined/
+            // limitation text still surfaces — semantic ranking does the selection.
+            hits = await _store.SearchAsync(
+                queryVector, new RetrievalFilter { Project = project }, RetrievalLimit, ct);
+        }
+
+        if (hits is null || hits.Count == 0)
+        {
             return new QueryAnswer(
                 $"No supporting evidence found for \"{question}\" in project {project}.",
                 [],
